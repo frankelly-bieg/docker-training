@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+  web:
+    container_name: nextjs-app
+    image: nextjs-app
+    build:
+      context: ./my-nextjs-app
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - my-training-network
+    depends_on:
+      - api
+  
+  api:
+    container_name: express-api
+    image: express-api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    networks:
+      - my-training-network
+    depends_on:
+      - mongodb
+  
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    networks:
+      - my-training-network
+
+networks:
+  my-training-network:
+    driver: bridge
+
+  
